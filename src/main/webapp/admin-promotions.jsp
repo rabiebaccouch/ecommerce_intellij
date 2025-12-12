@@ -7,13 +7,29 @@
     <title>Gestion des Promotions - Admin</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/shared/navbar/navbar.css">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/responsive.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+        }
+        .admin-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body>
     <jsp:include page="/shared/navbar/navbar.jsp"/>
@@ -27,19 +43,19 @@
 
             <nav class="admin-nav">
                 <a href="${pageContext.request.contextPath}/admin/dashboard">
-                    📊 Tableau de bord
+                    <i class="bi bi-speedometer2"></i> Tableau de bord
                 </a>
                 <a href="${pageContext.request.contextPath}/admin/products">
-                    📦 Produits
+                    <i class="bi bi-box"></i> Produits
                 </a>
                 <a href="${pageContext.request.contextPath}/admin/categories">
-                    🗂️ Catégories
+                    <i class="bi bi-folder"></i> Catégories
                 </a>
                 <a href="${pageContext.request.contextPath}/admin/promotions" class="active">
-                    🏷️ Promotions
+                    <i class="bi bi-tag"></i> Promotions
                 </a>
                 <a href="${pageContext.request.contextPath}/logout" class="logout">
-                    🚪 Déconnexion
+                    <i class="bi bi-box-arrow-right"></i> Déconnexion
                 </a>
             </nav>
         </aside>
@@ -47,37 +63,43 @@
         <main class="admin-content">
             <header class="admin-header">
                 <h1>Gestion des promotions</h1>
-                <button class="btn-primary" onclick="showPromotionForm()">
-                    + Nouvelle promotion
+                <button class="btn btn-primary" onclick="showPromotionForm()">
+                    <i class="bi bi-plus-circle"></i> Nouvelle promotion
                 </button>
             </header>
 
             <!-- Promotion Form -->
             <div class="admin-form" id="promotionForm" style="display: none;">
                 <h2 id="promoFormTitle">Nouvelle promotion</h2>
-                <form action="${pageContext.request.contextPath}/admin/promotions" method="post">
+                <form action="${pageContext.request.contextPath}/admin/promotions" method="post" class="needs-validation" novalidate>
                     <input type="hidden" name="id" id="promotionId">
 
-                    <div class="form-group">
-                        <label for="promoName">Nom de la promotion *</label>
-                        <input type="text" id="promoName" name="name" required>
+                    <div class="mb-3">
+                        <label for="promoName" class="form-label">Nom de la promotion *</label>
+                        <input type="text" class="form-control" id="promoName" name="name" required>
+                        <div class="invalid-feedback">
+                            Veuillez saisir le nom de la promotion.
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="promoDescription">Description</label>
-                        <textarea id="promoDescription" name="description" rows="3"></textarea>
+                    <div class="mb-3">
+                        <label for="promoDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="promoDescription" name="description" rows="3"></textarea>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="discount">Réduction (%) *</label>
-                            <input type="number" id="discount" name="discount"
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="discount" class="form-label">Réduction (%) *</label>
+                            <input type="number" class="form-control" id="discount" name="discount"
                                    min="1" max="100" step="1" required>
+                            <div class="invalid-feedback">
+                                Veuillez saisir la réduction (1-100%).
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="duration">Durée (jours)</label>
-                            <select id="duration" name="duration">
+                        <div class="col-md-6">
+                            <label for="duration" class="form-label">Durée (jours)</label>
+                            <select class="form-select" id="duration" name="duration">
                                 <option value="7">1 semaine</option>
                                 <option value="14">2 semaines</option>
                                 <option value="30" selected>1 mois</option>
@@ -86,20 +108,33 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Appliquer à:</label>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" name="applyToAll"> Tous les produits</label>
-                            <label><input type="checkbox" name="applyToCategory"> Par catégorie</label>
-                            <label><input type="checkbox" name="applyToSelected"> Produits sélectionnés</label>
+                    <div class="mb-3">
+                        <label class="form-label">Appliquer à:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="applyToAll" id="applyToAll">
+                            <label class="form-check-label" for="applyToAll">
+                                Tous les produits
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="applyToCategory" id="applyToCategory">
+                            <label class="form-check-label" for="applyToCategory">
+                                Par catégorie
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="applyToSelected" id="applyToSelected">
+                            <label class="form-check-label" for="applyToSelected">
+                                Produits sélectionnés
+                            </label>
                         </div>
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" class="btn-secondary" onclick="hidePromotionForm()">
+                        <button type="button" class="btn btn-secondary" onclick="hidePromotionForm()">
                             Annuler
                         </button>
-                        <button type="submit" class="btn-primary">
+                        <button type="submit" class="btn btn-primary">
                             Créer promotion
                         </button>
                     </div>
@@ -107,116 +142,146 @@
             </div>
 
             <!-- Promotions List -->
-            <div class="promotions-grid">
+            <div class="row mt-4">
                 <c:forEach var="promotion" items="${promotions}">
-                    <div class="promotion-card-admin ${promotion.active ? 'active' : 'expired'}">
-                        <div class="promotion-header">
-                            <div class="promotion-badge">
-                                -${promotion.discountPercentage}%
-                            </div>
-                            <div class="promotion-actions">
-                                <button class="btn-secondary btn-small"
-                                        onclick="editPromotion(${promotion.id})">
-                                    ✏️
-                                </button>
-                                <a href="${pageContext.request.contextPath}/admin/promotion/delete/${promotion.id}"
-                                   class="btn-danger btn-small"
-                                   onclick="return confirm('Supprimer cette promotion?')">
-                                    🗑️
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="promotion-body">
-                            <h3>${promotion.name}</h3>
-                            <p>${promotion.description}</p>
-
-                            <div class="promotion-dates">
-                                <div class="date-item">
-                                    <span class="date-label">Début:</span>
-                                    <span class="date-value">
-                                        <fmt:formatDate value="${promotion.startDate}" pattern="dd/MM/yyyy"/>
-                                    </span>
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="promotion-card-admin ${promotion.active ? 'active' : 'expired'}">
+                            <div class="promotion-header d-flex justify-content-between align-items-center">
+                                <div class="promotion-badge">
+                                    -${promotion.discountPercentage}%
                                 </div>
-                                <div class="date-item">
-                                    <span class="date-label">Fin:</span>
-                                    <span class="date-value">
-                                        <fmt:formatDate value="${promotion.endDate}" pattern="dd/MM/yyyy"/>
-                                    </span>
+                                <div class="promotion-actions">
+                                    <button class="btn btn-warning btn-sm"
+                                            onclick="editPromotion(${promotion.id})">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <a href="${pageContext.request.contextPath}/admin/promotion/delete/${promotion.id}"
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Supprimer cette promotion?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
                                 </div>
                             </div>
 
-                            <div class="promotion-stats">
-                                <div class="stat-item">
-                                    <span class="stat-label">Statut:</span>
-                                    <span class="stat-value ${promotion.active ? 'active' : 'expired'}">
-                                        ${promotion.active ? 'Active' : 'Expirée'}
-                                    </span>
+                            <div class="promotion-body">
+                                <h3 class="h5">${promotion.name}</h3>
+                                <p class="text-muted">${promotion.description}</p>
+
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="date-item">
+                                            <span class="date-label">Début:</span>
+                                            <span class="date-value">
+                                                <fmt:formatDate value="${promotion.startDate}" pattern="dd/MM/yyyy"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="date-item">
+                                            <span class="date-label">Fin:</span>
+                                            <span class="date-value">
+                                                <fmt:formatDate value="${promotion.endDate}" pattern="dd/MM/yyyy"/>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Produits:</span>
-                                    <span class="stat-value">0</span>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Statut:</span>
+                                            <span class="stat-value ${promotion.active ? 'active' : 'expired'}">
+                                                <span class="badge ${promotion.active ? 'bg-success' : 'bg-danger'}">
+                                                    ${promotion.active ? 'Active' : 'Expirée'}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Produits:</span>
+                                            <span class="stat-value badge bg-info">0</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="promotion-footer">
-                            <small>Créée le <fmt:formatDate value="${promotion.startDate}" pattern="dd/MM/yyyy"/></small>
+                            <div class="promotion-footer text-end">
+                                <small>Créée le <fmt:formatDate value="${promotion.startDate}" pattern="dd/MM/yyyy"/></small>
+                            </div>
                         </div>
                     </div>
                 </c:forEach>
 
                 <!-- Sample promotions if none exist -->
                 <c:if test="${empty promotions}">
-                    <div class="promotion-card-admin active">
-                        <div class="promotion-header">
-                            <div class="promotion-badge">
-                                -20%
-                            </div>
-                        </div>
-                        <div class="promotion-body">
-                            <h3>Black Friday</h3>
-                            <p>Promotion spéciale Black Friday sur tous les produits électroniques</p>
-                            <div class="promotion-dates">
-                                <div class="date-item">
-                                    <span class="date-label">Début:</span>
-                                    <span class="date-value">24/11/2024</span>
-                                </div>
-                                <div class="date-item">
-                                    <span class="date-label">Fin:</span>
-                                    <span class="date-value">30/11/2024</span>
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="promotion-card-admin active">
+                            <div class="promotion-header">
+                                <div class="promotion-badge">
+                                    -20%
                                 </div>
                             </div>
-                            <div class="promotion-stats">
-                                <div class="stat-item">
-                                    <span class="stat-label">Statut:</span>
-                                    <span class="stat-value active">Active</span>
+                            <div class="promotion-body">
+                                <h3 class="h5">Black Friday</h3>
+                                <p class="text-muted">Promotion spéciale Black Friday sur tous les produits électroniques</p>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="date-item">
+                                            <span class="date-label">Début:</span>
+                                            <span class="date-value">24/11/2024</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="date-item">
+                                            <span class="date-label">Fin:</span>
+                                            <span class="date-value">30/11/2024</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Produits:</span>
-                                    <span class="stat-value">15</span>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Statut:</span>
+                                            <span class="stat-value active">
+                                                <span class="badge bg-success">Active</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Produits:</span>
+                                            <span class="stat-value badge bg-info">15</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="promotion-card-admin active">
-                        <div class="promotion-header">
-                            <div class="promotion-badge">
-                                -15%
-                            </div>
-                        </div>
-                        <div class="promotion-body">
-                            <h3>Soldes d'été</h3>
-                            <p>Réduction sur la collection vêtements d'été</p>
-                            <div class="promotion-dates">
-                                <div class="date-item">
-                                    <span class="date-label">Début:</span>
-                                    <span class="date-value">01/07/2024</span>
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="promotion-card-admin active">
+                            <div class="promotion-header">
+                                <div class="promotion-badge">
+                                    -15%
                                 </div>
-                                <div class="date-item">
-                                    <span class="date-label">Fin:</span>
-                                    <span class="date-value">31/08/2024</span>
+                            </div>
+                            <div class="promotion-body">
+                                <h3 class="h5">Soldes d'été</h3>
+                                <p class="text-muted">Réduction sur la collection vêtements d'été</p>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="date-item">
+                                            <span class="date-label">Début:</span>
+                                            <span class="date-value">01/07/2024</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="date-item">
+                                            <span class="date-label">Fin:</span>
+                                            <span class="date-value">31/08/2024</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -226,140 +291,8 @@
         </main>
     </div>
 
-    <style>
-        .promotions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .promotion-card-admin {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            overflow: hidden;
-            border: 2px solid #e2e8f0;
-        }
-
-        .promotion-card-admin.active {
-            border-color: #48bb78;
-        }
-
-        .promotion-card-admin.expired {
-            border-color: #fed7d7;
-            opacity: 0.7;
-        }
-
-        .promotion-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .promotion-badge {
-            background: white;
-            color: #667eea;
-            font-size: 1.5rem;
-            font-weight: bold;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-        }
-
-        .promotion-body {
-            padding: 1.5rem;
-        }
-
-        .promotion-card-admin h3 {
-            margin: 0 0 0.5rem 0;
-            color: #2d3748;
-        }
-
-        .promotion-card-admin p {
-            color: #718096;
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
-
-        .promotion-dates {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .date-item {
-            background: #f7fafc;
-            padding: 0.8rem;
-            border-radius: 5px;
-        }
-
-        .date-label {
-            display: block;
-            font-size: 0.8rem;
-            color: #a0aec0;
-            margin-bottom: 0.3rem;
-        }
-
-        .date-value {
-            font-weight: 500;
-            color: #2d3748;
-        }
-
-        .promotion-stats {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .stat-item {
-            flex: 1;
-        }
-
-        .stat-label {
-            display: block;
-            font-size: 0.8rem;
-            color: #a0aec0;
-        }
-
-        .stat-value {
-            font-weight: bold;
-        }
-
-        .stat-value.active {
-            color: #38a169;
-        }
-
-        .stat-value.expired {
-            color: #f56565;
-        }
-
-        .promotion-footer {
-            padding: 1rem 1.5rem;
-            background: #f7fafc;
-            border-top: 1px solid #e2e8f0;
-            text-align: right;
-        }
-
-        .promotion-footer small {
-            color: #a0aec0;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .checkbox-group label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-    </style>
-
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function showPromotionForm() {
             document.getElementById('promotionForm').style.display = 'block';
@@ -376,6 +309,22 @@
             alert('Fonctionnalité d\'édition à implémenter avec AJAX');
             showPromotionForm();
         }
+
+        // Bootstrap form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
     </script>
 </body>
 </html>

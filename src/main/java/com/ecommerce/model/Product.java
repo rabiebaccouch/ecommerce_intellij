@@ -13,8 +13,10 @@ public class Product {
 
     public Product() {}
 
+    // Constructor with all fields including imageUrl
     public Product(int id, String name, String description, double price,
-                   int categoryId, String imageUrl, int stock) {
+                   int categoryId, String imageUrl, int stock,
+                   boolean hasPromotion, double discountPrice) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -22,8 +24,21 @@ public class Product {
         this.categoryId = categoryId;
         this.imageUrl = imageUrl;
         this.stock = stock;
-        this.hasPromotion = false;
-        this.discountPrice = price;
+        this.hasPromotion = hasPromotion;
+        this.discountPrice = discountPrice;
+    }
+
+    // Constructor for products without promotion
+    public Product(int id, String name, String description, double price,
+                   int categoryId, String imageUrl, int stock) {
+        this(id, name, description, price, categoryId, imageUrl, stock, false, price);
+    }
+
+    // Constructor for products with promotion
+    public Product(int id, String name, String description, double price,
+                   int categoryId, String imageUrl, int stock,
+                   double discountPrice) {
+        this(id, name, description, price, categoryId, imageUrl, stock, true, discountPrice);
     }
 
     // Getters and Setters
